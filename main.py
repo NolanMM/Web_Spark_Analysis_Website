@@ -1,16 +1,23 @@
-# This is a sample Python script.
+from flask import Flask, render_template, request, redirect, make_response
+import string
+import secrets
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = Flask(__name__)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def _generate_session_id_(length=50):
+    """
+    Generates a random string of fixed length
+    :param length: 50
+    :return: a random string of fixed length for session_id
+    """
+    chars = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(chars) for _ in range(length))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+@app.route('/', methods=['GET'])
+def _index_services_():
+    session_id = request.cookies.get('session_id')
+    if session_id is None:
+        session_id = _generate_session_id_()
+        
